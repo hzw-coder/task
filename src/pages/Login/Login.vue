@@ -28,7 +28,14 @@
           v-model="loginForm.code"
           class="code"
         ></el-input>
-        <img src="" style="width: 120px" alt="" />
+        <img
+          class="code_img"
+          ref="img_codeRef"
+          title="点击刷新验证码"
+          src="http://localhost:3000/api/login/img_code"
+          alt="暂无验证码"
+          @click="changeCode"
+        />
       </el-form-item>
       <el-button style="width: 250px; margin: 0px 0px 30px 100px" type="primary"
         >登录</el-button
@@ -59,6 +66,13 @@ export default {
       },
     };
   },
+  methods: {
+    // 刷新验证码
+    changeCode() {
+      this.$refs.img_codeRef.src =
+        "http://localhost:3000/api/login/img_code?time" + new Date();
+    },
+  },
 };
 </script>
 <style lang="less" scoped>
@@ -73,9 +87,16 @@ export default {
   border: 1px solid #e0e0e0;
   .el-form {
     padding-right: 50px;
+    // 验证码框
     .code {
       width: 120px;
       margin-right: 10px;
+    }
+    // 验证码图像
+    .code_img {
+      vertical-align: middle;
+      width: 110px;
+      height: 40px;
     }
   }
 }
