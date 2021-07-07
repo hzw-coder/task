@@ -22,19 +22,19 @@
           v-model="loginForm.password"
         ></el-input>
       </el-form-item>
-      <el-form-item label="验证码" prop="code">
+      <el-form-item label="验证码" prop="captcha">
         <el-input
           placeholder="请输入验证码"
-          v-model="loginForm.code"
-          class="code"
+          v-model="loginForm.captcha"
+          class="captcha"
         ></el-input>
         <img
-          class="code_img"
-          ref="img_codeRef"
+          class="captcha_img"
+          ref="img_captchaRef"
           title="点击刷新验证码"
-          src="http://localhost:3000/api/login/img_code"
+          src="http://localhost:3000/api/login/img_captcha"
           alt="暂无验证码"
-          @click="changeCode"
+          @click="changeCaptcha"
         />
       </el-form-item>
       <el-button style="width: 250px; margin: 0px 0px 30px 100px" type="primary"
@@ -51,7 +51,7 @@ export default {
       loginForm: {
         username: "",
         password: "",
-        code: "",
+        captcha: "",
       },
       loginRules: {
         username: [
@@ -60,17 +60,17 @@ export default {
         ],
         password: [
           { required: true, message: "请输入密码", trigger: "blur" },
-          { min: 6, max: 20, message: "长度在  到 20 个字符", trigger: "blur" },
+          { min: 6, max: 20, message: "长度在6到20个字符", trigger: "blur" },
         ],
-        code: [{ required: true, message: "请输入验证码", trigger: "blur" }],
+        captcha: [{ required: true, message: "请输入验证码", trigger: "blur" }],
       },
     };
   },
   methods: {
     // 刷新验证码
-    changeCode() {
-      this.$refs.img_codeRef.src =
-        "http://localhost:3000/api/login/img_code?time" + new Date();
+    changeCaptcha() {
+      this.$refs.img_captchaRef.src =
+        "http://localhost:3000/api/login/img_captcha?time" + new Date();
     },
   },
 };
@@ -88,12 +88,12 @@ export default {
   .el-form {
     padding-right: 50px;
     // 验证码框
-    .code {
+    .captcha {
       width: 120px;
       margin-right: 10px;
     }
     // 验证码图像
-    .code_img {
+    .captcha_img {
       vertical-align: middle;
       width: 110px;
       height: 40px;
