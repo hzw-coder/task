@@ -37,7 +37,10 @@
           @click="changeCaptcha"
         />
       </el-form-item>
-      <el-button style="width: 250px; margin: 0px 0px 30px 100px" type="primary"
+      <el-button
+        @click="login"
+        style="width: 250px; margin: 0px 0px 30px 100px"
+        type="primary"
         >登录</el-button
       >
     </el-form>
@@ -56,7 +59,7 @@ export default {
       loginRules: {
         username: [
           { required: true, message: "请输入用户名", trigger: "blur" },
-          { min: 3, max: 5, message: "长度在 3 到 5 个字符", trigger: "blur" },
+          { min: 3, max: 8, message: "长度在 3 到 8 个字符", trigger: "blur" },
         ],
         password: [
           { required: true, message: "请输入密码", trigger: "blur" },
@@ -71,6 +74,41 @@ export default {
     changeCaptcha() {
       this.$refs.img_captchaRef.src =
         "http://localhost:3000/api/login/img_captcha?time" + new Date();
+    },
+    // 登录
+    async login() {
+      // 前端预校验
+      this.$refs["ruleFormRef"].validate((valid) => {
+        if (!valid) {
+          this.$message({
+            message: "请填写正确信息",
+            type: "warning",
+          });
+          return false;
+        }
+      });
+      let postData = {
+        username: this.loginForm.username,
+        password: this.loginForm.password,
+        captcha: this.loginForm.captcha,
+      };
+      // 发送请求
+      let result = await this.$axios.post(
+        "http://localhost:3000/api/login",
+        postData
+      );
+      if (result.data.code == "200") {
+        window.localStorage.setItem("token", result.data.token);
+        alert("登录成功");
+      } else if (result.data.code !== "200") {
+        this.$message({
+          message: result.data.msg,
+          type: "error",
+        });
+        // 清空表单
+        this.$refs["ruleFormRef"].resetFields();
+        return false;
+      }
     },
   },
 };
@@ -96,7 +134,7 @@ export default {
     .captcha_img {
       vertical-align: middle;
       width: 110px;
-      height: 40px;
+      height: 45px;
     }
   }
 }
