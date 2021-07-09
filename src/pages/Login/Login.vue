@@ -81,6 +81,7 @@ export default {
       this.$refs["ruleFormRef"].validate((valid) => {
         if (!valid) {
           this.$message({
+            showClose: true,
             message: "请填写正确信息",
             type: "warning",
           });
@@ -102,6 +103,7 @@ export default {
         alert("登录成功");
       } else if (result.data.code !== "200") {
         this.$message({
+          showClose: true,
           message: result.data.msg,
           type: "error",
         });
