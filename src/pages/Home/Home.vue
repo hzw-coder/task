@@ -1,12 +1,11 @@
 <template>
-  <el-container>
-    <el-aside width="200px">
+  <el-container class="home">
+    <el-aside :width="isCollapse ? '65px' : '200px'">
       <el-menu
         default-active="1-4-1"
         class="el-menu-vertical-demo"
-        @open="handleOpen"
-        @close="handleClose"
         :collapse="isCollapse"
+        :collapse-transition="false"
       >
         <el-menu-item index="1">
           <i class="el-icon-s-home"></i>
@@ -16,21 +15,21 @@
           <i class="el-icon-circle-plus"></i>
           <span slot="title">添加任务</span>
         </el-menu-item>
-        <el-submenu index="2">
+        <el-submenu index="3">
           <template slot="title">
             <i class="el-icon-s-grid"></i>
             <span slot="title">列表</span>
           </template>
           <el-menu-item-group>
-            <el-menu-item index="1-1">
+            <el-menu-item index="3-1">
               <i class="el-icon-document"></i>
               <span slot="title">任务列表</span>
             </el-menu-item>
-            <el-menu-item index="1-2">
+            <el-menu-item index="3-2">
               <i class="el-icon-menu"></i>
               <span slot="title">分类列表</span>
             </el-menu-item>
-            <el-menu-item index="1-3">
+            <el-menu-item index="3-3">
               <i class="el-icon-price-tag"></i>
               <span slot="title">标签列表</span>
             </el-menu-item>
@@ -47,12 +46,12 @@
       </el-menu>
     </el-aside>
     <el-container>
-      <el-header
-        >欢迎来到任务系统
-        <i class="el-icon-s-fold">收起</i>
-        <i class="el-icon-s-unfold">展开</i>
+      <el-header class="homeHeader">
+        <span class="icon">
+          <i @click="toggleIcon" :class="iconClass"></i>
+        </span>
       </el-header>
-      <el-main>Main</el-main>
+      <el-main>欢迎来到任务系统</el-main>
     </el-container>
   </el-container>
 </template>
@@ -64,20 +63,31 @@ export default {
   name: "home",
   data() {
     return {
+      // 默认展开
       isCollapse: false,
+      iconClass: "el-icon-s-fold",
     };
   },
 
   methods: {
-    handleOpen(key, keyPath) {
-      console.log(key, keyPath);
-    },
-    handleClose(key, keyPath) {
-      console.log(key, keyPath);
+    toggleIcon() {
+      this.isCollapse = !this.isCollapse;
+      if (this.isCollapse) {
+        // 收起
+        this.iconClass = "el-icon-s-unfold";
+      } else {
+        // 展开
+        this.iconClass = "el-icon-s-fold";
+      }
     },
   },
 };
 </script>
 
 <style lang="less" scoped>
+.home {
+  .homeHeader {
+    background-color: #cecece;
+  }
+}
 </style>
