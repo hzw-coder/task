@@ -11,4 +11,13 @@ export default {
 </script>
 
 <style>
+html,
+body,
+#app {
+  height: 100%;
+}
+* {
+  margin: 0;
+  pad: 0;
+}
 </style>

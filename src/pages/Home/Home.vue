@@ -6,6 +6,8 @@
         class="el-menu-vertical-demo"
         :collapse="isCollapse"
         :collapse-transition="false"
+        text-color="#ffffff"
+        background-color="#304156"
       >
         <el-menu-item index="1">
           <i class="el-icon-s-home"></i>
@@ -50,6 +52,17 @@
         <span class="icon">
           <i @click="toggleIcon" :class="iconClass"></i>
         </span>
+        <!-- 头像区域 -->
+        <el-dropdown trigger="click">
+          <span class="el-dropdown-link">
+            下拉菜单<i class="el-icon-arrow-down el-icon--right"></i>
+          </span>
+          <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item>首页</el-dropdown-item>
+            <el-dropdown-item>个人中心</el-dropdown-item>
+            <el-dropdown-item divided>退出登录</el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
       </el-header>
       <el-main>欢迎来到任务系统</el-main>
     </el-container>
@@ -86,8 +99,24 @@ export default {
 
 <style lang="less" scoped>
 .home {
+  height: 100%;
+  .el-aside {
+    background-color: #304156;
+    .el-menu {
+      border: none;
+    }
+  }
+
   .homeHeader {
     background-color: #cecece;
+    line-height: 60px;
+    display: flex;
+    justify-content: space-between;
+    .icon {
+      height: 50px;
+      width: 50px;
+      font-size: 30px;
+    }
   }
 }
 </style>
