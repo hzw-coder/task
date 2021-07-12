@@ -3,6 +3,7 @@ import Router from 'vue-router'
 const Login = () => import('../pages/Login/Login.vue')
 const Home = () => import('../pages/Home/Home.vue')
 const Welcome = () => import('../pages/Welcome/Welcome.vue')
+const Addtask = () => import('../pages/Addtask/Addtask.vue')
 
 Vue.use(Router)
 
@@ -27,10 +28,16 @@ const router = new Router({
       component: Home,
       redirect: '/welcome',
       children: [{
-        path: '/welcome',
-        name: 'welcome',
-        component: Welcome
-      }]
+          path: '/welcome',
+          name: 'welcome',
+          component: Welcome
+        },
+        {
+          path: '/addtask',
+          name: 'addtask',
+          component: Addtask
+        }
+      ]
     }
   ]
 })
