@@ -113,7 +113,7 @@ export default {
         case "home":
           // 跳转首页
           this.$router.push("/welcome");
-          // 改变能激活菜单
+          // 改变激活菜单
           this.activePath = "/welcome";
           break;
         case "personal":
