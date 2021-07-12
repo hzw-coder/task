@@ -17,10 +17,14 @@ import {
   MenuItemGroup,
   Dropdown,
   DropdownMenu,
-  DropdownItem
+  DropdownItem,
+  Alert,
+  MessageBox,
+  Avatar
 } from 'element-ui'
 
 Vue.prototype.$message = Message
+Vue.prototype.$confirm = MessageBox.confirm
 Vue.use(Button)
 Vue.use(Input)
 Vue.use(Form)
@@ -32,9 +36,11 @@ Vue.use(Main)
 Vue.use(RadioGroup)
 Vue.use(RadioButton)
 Vue.use(Menu)
+Vue.use(Avatar)
 Vue.use(Submenu)
 Vue.use(MenuItem)
 Vue.use(MenuItemGroup)
 Vue.use(Dropdown)
 Vue.use(DropdownMenu)
 Vue.use(DropdownItem)
+Vue.use(Alert)

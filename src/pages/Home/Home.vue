@@ -2,18 +2,19 @@
   <el-container class="home">
     <el-aside :width="isCollapse ? '65px' : '200px'">
       <el-menu
-        default-active="1-4-1"
+        :default-active="activePath"
         class="el-menu-vertical-demo"
         :collapse="isCollapse"
         :collapse-transition="false"
         text-color="#ffffff"
         background-color="#304156"
+        router
       >
-        <el-menu-item index="1">
+        <el-menu-item @click="showPath" index="/welcome">
           <i class="el-icon-s-home"></i>
           <span slot="title">首页</span>
         </el-menu-item>
-        <el-menu-item index="2">
+        <el-menu-item @click="showPath" index="2">
           <i class="el-icon-circle-plus"></i>
           <span slot="title">添加任务</span>
         </el-menu-item>
@@ -23,48 +24,55 @@
             <span slot="title">列表</span>
           </template>
           <el-menu-item-group>
-            <el-menu-item index="3-1">
+            <el-menu-item @click="showPath" index="3-1">
               <i class="el-icon-document"></i>
               <span slot="title">任务列表</span>
             </el-menu-item>
-            <el-menu-item index="3-2">
+            <el-menu-item @click="showPath" index="3-2">
               <i class="el-icon-menu"></i>
               <span slot="title">分类列表</span>
             </el-menu-item>
-            <el-menu-item index="3-3">
+            <el-menu-item @click="showPath" index="3-3">
               <i class="el-icon-price-tag"></i>
               <span slot="title">标签列表</span>
             </el-menu-item>
           </el-menu-item-group>
         </el-submenu>
-        <el-menu-item index="4">
+        <el-menu-item @click="showPath" index="4">
           <i class="el-icon-s-comment"></i>
           <span slot="title">提交反馈</span>
         </el-menu-item>
-        <el-menu-item index="5">
+        <el-menu-item @click="showPath" index="5">
           <i class="el-icon-s-data"></i>
           <span slot="title">数据统计</span>
         </el-menu-item>
       </el-menu>
     </el-aside>
     <el-container>
-      <el-header class="homeHeader">
+      <el-header>
         <span class="icon">
           <i @click="toggleIcon" :class="iconClass"></i>
         </span>
         <!-- 头像区域 -->
-        <el-dropdown trigger="click">
+        <el-dropdown @command="handleCommand" trigger="click">
           <span class="el-dropdown-link">
-            下拉菜单<i class="el-icon-arrow-down el-icon--right"></i>
+            <el-avatar
+              src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
+            ></el-avatar
+            ><i class="el-icon-arrow-down el-icon--right"></i>
           </span>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item>首页</el-dropdown-item>
-            <el-dropdown-item>个人中心</el-dropdown-item>
-            <el-dropdown-item divided>退出登录</el-dropdown-item>
+            <el-dropdown-item command="home">首页</el-dropdown-item>
+            <el-dropdown-item command="personal">个人中心</el-dropdown-item>
+            <el-dropdown-item command="logout" divided
+              >退出登录</el-dropdown-item
+            >
           </el-dropdown-menu>
         </el-dropdown>
       </el-header>
-      <el-main>欢迎来到任务系统</el-main>
+      <el-main>
+        <router-view></router-view>
+      </el-main>
     </el-container>
   </el-container>
 </template>
@@ -79,9 +87,9 @@ export default {
       // 默认展开
       isCollapse: false,
       iconClass: "el-icon-s-fold",
+      activePath: "/welcome",
     };
   },
-
   methods: {
     toggleIcon() {
       this.isCollapse = !this.isCollapse;
@@ -91,6 +99,45 @@ export default {
       } else {
         // 展开
         this.iconClass = "el-icon-s-fold";
+      }
+    },
+    showPath() {
+      this.activePath = this.$route.path;
+    },
+    handleCommand(command) {
+      switch (command) {
+        case "home":
+          this.$router.push("/home");
+          break;
+        case "personal":
+          this.$message({
+            message: "功能暂未开放,请期待",
+            type: "warning",
+          });
+          break;
+        case "logout":
+          this.$confirm("确定退出登录?", "提示", {
+            confirmButtonText: "确定",
+            cancelButtonText: "取消",
+            type: "warning",
+          })
+            .then(() => {
+              this.$message({
+                type: "success",
+                message: "退出登录成功!",
+              });
+              // 清除token
+              window.localStorage.clear();
+              // 跳转到登录页面
+              this.$router.replace("/login");
+            })
+            .catch(() => {
+              this.$message({
+                type: "info",
+                message: "已取消退出登录",
+              });
+            });
+          break;
       }
     },
   },
@@ -107,15 +154,22 @@ export default {
     }
   }
 
-  .homeHeader {
+  .el-header {
     background-color: #cecece;
     line-height: 60px;
     display: flex;
     justify-content: space-between;
     .icon {
-      height: 50px;
-      width: 50px;
       font-size: 30px;
+    }
+    .el-dropdown {
+      line-height: 60px;
+      .el-dropdown-link {
+        // 设置头像垂直居中
+        height: 60px;
+        display: flex;
+        align-items: center;
+      }
     }
   }
 }
