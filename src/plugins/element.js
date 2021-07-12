@@ -20,7 +20,12 @@ import {
   DropdownItem,
   Alert,
   MessageBox,
-  Avatar
+  Avatar,
+  Card,
+  Select,
+  Option,
+  CheckboxGroup,
+  Checkbox,
 } from 'element-ui'
 
 Vue.prototype.$message = Message
@@ -44,3 +49,8 @@ Vue.use(Dropdown)
 Vue.use(DropdownMenu)
 Vue.use(DropdownItem)
 Vue.use(Alert)
+Vue.use(Card)
+Vue.use(Select)
+Vue.use(Option)
+Vue.use(CheckboxGroup)
+Vue.use(Checkbox)

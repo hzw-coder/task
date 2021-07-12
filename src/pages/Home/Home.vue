@@ -14,7 +14,7 @@
           <i class="el-icon-s-home"></i>
           <span slot="title">首页</span>
         </el-menu-item>
-        <el-menu-item @click="showPath" index="2">
+        <el-menu-item @click="showPath" index="/addtask">
           <i class="el-icon-circle-plus"></i>
           <span slot="title">添加任务</span>
         </el-menu-item>
@@ -87,8 +87,12 @@ export default {
       // 默认展开
       isCollapse: false,
       iconClass: "el-icon-s-fold",
-      activePath: "/welcome",
+      activePath: "",
     };
+  },
+  mounted() {
+    // 显示激活项
+    this.showPath();
   },
   methods: {
     toggleIcon() {
@@ -107,7 +111,10 @@ export default {
     handleCommand(command) {
       switch (command) {
         case "home":
-          this.$router.push("/home");
+          // 跳转首页
+          this.$router.push("/welcome");
+          // 改变能激活菜单
+          this.activePath = "/welcome";
           break;
         case "personal":
           this.$message({
