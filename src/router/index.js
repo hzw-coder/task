@@ -4,6 +4,7 @@ const Login = () => import('../pages/Login/Login.vue')
 const Home = () => import('../pages/Home/Home.vue')
 const Welcome = () => import('../pages/Welcome/Welcome.vue')
 const Addtask = () => import('../pages/Addtask/Addtask.vue')
+const Comment = () => import('../pages/Comment/Comment.vue')
 
 Vue.use(Router)
 
@@ -36,6 +37,11 @@ const router = new Router({
           path: '/addtask',
           name: 'addtask',
           component: Addtask
+        },
+        {
+          path: '/comment',
+          name: 'comment',
+          component: Comment
         }
       ]
     }

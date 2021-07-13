@@ -38,7 +38,7 @@
             </el-menu-item>
           </el-menu-item-group>
         </el-submenu>
-        <el-menu-item @click="showPath" index="4">
+        <el-menu-item @click="showPath" index="/comment">
           <i class="el-icon-s-comment"></i>
           <span slot="title">提交反馈</span>
         </el-menu-item>
