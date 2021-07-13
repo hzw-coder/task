@@ -24,15 +24,15 @@
             <span slot="title">列表</span>
           </template>
           <el-menu-item-group>
-            <el-menu-item @click="showPath" index="3-1">
+            <el-menu-item @click="showPath" index="/task">
               <i class="el-icon-document"></i>
               <span slot="title">任务列表</span>
             </el-menu-item>
-            <el-menu-item @click="showPath" index="3-2">
+            <el-menu-item @click="showPath" index="/category">
               <i class="el-icon-menu"></i>
               <span slot="title">分类列表</span>
             </el-menu-item>
-            <el-menu-item @click="showPath" index="3-3">
+            <el-menu-item @click="showPath" index="/label">
               <i class="el-icon-price-tag"></i>
               <span slot="title">标签列表</span>
             </el-menu-item>

@@ -5,6 +5,9 @@ const Home = () => import('../pages/Home/Home.vue')
 const Welcome = () => import('../pages/Welcome/Welcome.vue')
 const Addtask = () => import('../pages/Addtask/Addtask.vue')
 const Comment = () => import('../pages/Comment/Comment.vue')
+const Category = () => import('../pages/List/Category.vue')
+const Label = () => import('../pages/List/Label.vue')
+const Task = () => import('../pages/List/Task.vue')
 
 Vue.use(Router)
 
@@ -42,6 +45,21 @@ const router = new Router({
           path: '/comment',
           name: 'comment',
           component: Comment
+        },
+        {
+          path: '/task',
+          name: 'task',
+          component: Task
+        },
+        {
+          path: '/category',
+          name: 'category',
+          component: Category
+        },
+        {
+          path: '/label',
+          name: 'label',
+          component: Label
         }
       ]
     }
