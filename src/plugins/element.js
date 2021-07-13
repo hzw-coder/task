@@ -26,6 +26,10 @@ import {
   Option,
   CheckboxGroup,
   Checkbox,
+  Table,
+  TableColumn,
+  Pagination,
+  Dialog
 } from 'element-ui'
 
 Vue.prototype.$message = Message
@@ -54,3 +58,7 @@ Vue.use(Select)
 Vue.use(Option)
 Vue.use(CheckboxGroup)
 Vue.use(Checkbox)
+Vue.use(Table)
+Vue.use(TableColumn)
+Vue.use(Pagination)
+Vue.use(Dialog)
