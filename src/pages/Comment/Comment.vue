@@ -57,7 +57,7 @@ export default {
   },
   methods: {
     // 提交反馈
-    submitComment() {
+    async submitComment() {
       this.$refs["commentFormRef"].validate((valid) => {
         if (!valid) {
           this.$message({
@@ -68,6 +68,30 @@ export default {
           return false;
         }
       });
+      let data = {
+        title: this.commentForm.title,
+        description: this.commentForm.describe,
+      };
+      // 发送请求
+      let result = await this.$axios.post(
+        "http://localhost:3000/api/comment",
+        data
+      );
+      if (result.data.code !== "200") {
+        this.$message({
+          showClose: true,
+          message: result.data.msg,
+          type: "error",
+        });
+      } else {
+        // 成功
+        this.$message({
+          showClose: true,
+          message: result.data.msg,
+          type: "success",
+        });
+        this.resetComment();
+      }
     },
     // 重置
     resetComment() {
