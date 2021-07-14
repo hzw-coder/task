@@ -129,14 +129,14 @@ export default {
             type: "warning",
           })
             .then(() => {
+              // 清除token
+              window.localStorage.clear();
               this.$message({
                 type: "success",
                 message: "退出登录成功!",
               });
-              // 清除token
-              window.localStorage.clear();
               // 跳转到登录页面
-              this.$router.replace("/login");
+              // this.$router.replace("/login");
             })
             .catch(() => {
               this.$message({
