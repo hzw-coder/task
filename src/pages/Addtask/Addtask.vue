@@ -18,14 +18,14 @@
               placeholder="请输入任务名称"
             ></el-input>
           </el-form-item>
-          <el-form-item label="任务分类" prop="region">
-            <el-select v-model="addTaskForm.region" placeholder="请选择分类">
+          <el-form-item label="任务分类" prop="category">
+            <el-select v-model="categoryList" placeholder="请选择分类">
               <el-option label="区域一" value="shanghai"></el-option>
               <el-option label="区域二" value="beijing"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="所属标签" prop="type">
-            <el-checkbox-group v-model="addTaskForm.type">
+          <el-form-item label="所属标签" prop="labelList">
+            <el-checkbox-group v-model="labelList">
               <el-checkbox label="美食" name="type"></el-checkbox>
               <el-checkbox label="活动" name="type"></el-checkbox>
               <el-checkbox label="学习" name="type"></el-checkbox>
@@ -64,14 +64,16 @@ export default {
     return {
       addTaskForm: {
         name: "", //名称
-        region: "", //分类
-        type: [], //所属标签
         desc: "", //描述
       },
+      categoryList: [], // 任务分类
+      labelList: [], //所属标签
       addTaskRules: {
-        name: [{ required: true, message: "请输入活动名称", trigger: "blur" }],
-        region: [{ required: true, message: "请选择...", trigger: "change" }],
-        type: [
+        name: [{ required: true, message: "请输入任务名称", trigger: "blur" }],
+        categoryList: [
+          { required: true, message: "请选择...", trigger: "change" },
+        ],
+        labelList: [
           {
             type: "array",
             required: true,
@@ -83,6 +85,11 @@ export default {
       },
     };
   },
+  mounted() {
+    // this.getCategoryList();
+    // this.getLabelList();
+  },
+
   methods: {
     // 添加按钮
     submitForm() {
@@ -97,7 +104,25 @@ export default {
         }
       });
     },
-
+    // 获取分类列表
+    async getCategoryList() {
+      // 发送get请求
+      let result = await this.$axios.get("http://localhost:3000/api/category");
+      if (result.data.code == "200") {
+        // 获取成功
+        this.categoryList = result.data.data;
+        // console.log(this.categoryList);
+      }
+    },
+    // 获取标签列表
+    async getLabelList() {
+      // 发送请求
+      let { data } = await this.$axios.get("http://localhost:3000/api/label");
+      if (data.code == "200") {
+        this.labelList = data.data;
+        console.log(this.labelList);
+      }
+    },
     // 重置表单
     resetForm() {
       this.$refs["addTaskFormRef"].resetFields();
