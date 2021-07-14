@@ -69,6 +69,9 @@ export default {
       },
     };
   },
+  mounted() {
+    this.changeCaptcha();
+  },
   methods: {
     // 刷新验证码
     changeCaptcha() {
