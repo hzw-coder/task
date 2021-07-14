@@ -67,15 +67,15 @@ const router = new Router({
 })
 // 路由导航守卫
 // router.beforeEach((to, from, next) => {
+//   const token = window.localStorage.getItem('token')
 //   if (to.path == '/login') {
 //     return next()
-//   }
-//   const token = window.localStorage.getItem('token')
-//   console.log(token);
-//   if (!token) {
-//     return next('/login')
 //   } else {
-//     next()
+//     if (!token) {
+//       return next('/login')
+//     } else {
+//       return next()
+//     }
 //   }
 // })
 
