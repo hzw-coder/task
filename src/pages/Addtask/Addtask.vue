@@ -18,24 +18,26 @@
               placeholder="请输入任务名称"
             ></el-input>
           </el-form-item>
-          <el-form-item label="任务分类" prop="region">
-            <el-select v-model="addTaskForm.region" placeholder="请选择分类">
-              <el-option label="区域一" value="shanghai"></el-option>
-              <el-option label="区域二" value="beijing"></el-option>
+          <el-form-item label="任务等级" prop="selectValue">
+            <el-select
+              v-model="addTaskForm.selectValue"
+              clearable
+              placeholder="请选择等级"
+            >
+              <el-option
+                v-for="item in categoryList"
+                :key="item.id"
+                :value="item.name"
+              ></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="所属标签" prop="type">
-            <el-checkbox-group v-model="addTaskForm.type">
-              <el-checkbox label="美食" name="type"></el-checkbox>
-              <el-checkbox label="活动" name="type"></el-checkbox>
-              <el-checkbox label="学习" name="type"></el-checkbox>
-              <el-checkbox label="生活" name="type"></el-checkbox>
-              <el-checkbox label="娱乐" name="type"></el-checkbox>
-              <el-checkbox label="家庭" name="type"></el-checkbox>
-              <el-checkbox label="事业" name="type"></el-checkbox>
-              <el-checkbox label="游戏" name="type"></el-checkbox>
-              <el-checkbox label="财经" name="type"></el-checkbox>
-              <el-checkbox label="体育" name="type"></el-checkbox>
+          <el-form-item label="所属标签" prop="checkList">
+            <el-checkbox-group :max="1" v-model="addTaskForm.checkList">
+              <el-checkbox
+                v-for="item in labelList"
+                :key="item.id"
+                :label="item.name"
+              ></el-checkbox>
             </el-checkbox-group>
           </el-form-item>
           <el-form-item label="任务描述" prop="desc">
@@ -64,14 +66,23 @@ export default {
     return {
       addTaskForm: {
         name: "", //名称
-        region: "", //分类
-        type: [], //所属标签
         desc: "", //描述
+        selectValue: "", //下拉框的选中值
+        checkList: [],
       },
+      categoryList: [], // 任务等级
+      labelList: [], //所属标签
+      // 验证规则
       addTaskRules: {
-        name: [{ required: true, message: "请输入活动名称", trigger: "blur" }],
-        region: [{ required: true, message: "请选择...", trigger: "change" }],
-        type: [
+        name: [{ required: true, message: "请输入任务名称", trigger: "blur" }],
+        selectValue: [
+          {
+            required: true,
+            message: "请选择任务等级",
+            trigger: "change",
+          },
+        ],
+        checkList: [
           {
             type: "array",
             required: true,
@@ -83,9 +94,30 @@ export default {
       },
     };
   },
+  mounted() {
+    this.getCategoryList();
+    this.getLabelList();
+  },
+  // 计算属性
+  computed: {
+    // 选中下拉框的id
+    selectedId() {
+      let newArr = this.categoryList.filter((x) => {
+        return x.name == this.addTaskForm.selectValue;
+      });
+      return newArr[0].id;
+    },
+    // 选中多选框的id
+    labelId() {
+      let newArr = this.labelList.filter((x) => {
+        return x.name == this.addTaskForm.checkList[0];
+      });
+      return newArr[0].id;
+    },
+  },
   methods: {
     // 添加按钮
-    submitForm() {
+    async submitForm() {
       this.$refs["addTaskFormRef"].validate((valid) => {
         if (!valid) {
           this.$message({
@@ -96,8 +128,64 @@ export default {
           return false;
         }
       });
+      let data = {
+        category_id: this.selectedId,
+        name: this.addTaskForm.name,
+        description: this.addTaskForm.desc,
+        label_id: this.labelId,
+      };
+      // 发送请求
+      let result = await this.$axios.post(
+        "http://localhost:3000/api/addtask",
+        data
+      );
+      if (result.data.code == "200") {
+        this.$message({
+          showClose: true,
+          message: result.data.msg,
+          type: "success",
+        });
+        // 重置表单
+        this.resetForm();
+      } else {
+        this.$message({
+          showClose: true,
+          message: result.data.msg,
+          type: "error",
+        });
+      }
     },
-
+    // 获取等级列表
+    async getCategoryList() {
+      // 发送get请求
+      let result = await this.$axios.get("http://localhost:3000/api/category");
+      if (result.data.code == "200") {
+        // 获取成功
+        this.categoryList = result.data.data;
+        // console.log(this.categoryList);
+      } else {
+        this.$message({
+          showClose: true,
+          message: result.data.code,
+          type: "error",
+        });
+      }
+    },
+    // 获取标签列表
+    async getLabelList() {
+      // 发送请求
+      let { data } = await this.$axios.get("http://localhost:3000/api/label");
+      if (data.code == "200") {
+        this.labelList = data.data;
+        // console.log(this.labelList);
+      } else {
+        this.$message({
+          showClose: true,
+          message: data.code,
+          type: "error",
+        });
+      }
+    },
     // 重置表单
     resetForm() {
       this.$refs["addTaskFormRef"].resetFields();

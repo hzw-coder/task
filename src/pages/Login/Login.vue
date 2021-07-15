@@ -101,6 +101,7 @@ export default {
       if (result.data.code == "200") {
         window.localStorage.setItem("token", result.data.token);
         alert("登录成功");
+        this.$router.replace("/home");
       } else if (result.data.code !== "200") {
         this.$message({
           showClose: true,

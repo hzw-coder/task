@@ -30,7 +30,7 @@
             </el-menu-item>
             <el-menu-item @click="showPath" index="/category">
               <i class="el-icon-menu"></i>
-              <span slot="title">分类列表</span>
+              <span slot="title">等级列表</span>
             </el-menu-item>
             <el-menu-item @click="showPath" index="/label">
               <i class="el-icon-price-tag"></i>
@@ -129,12 +129,12 @@ export default {
             type: "warning",
           })
             .then(() => {
+              // 清除token
+              window.localStorage.clear();
               this.$message({
                 type: "success",
                 message: "退出登录成功!",
               });
-              // 清除token
-              window.localStorage.clear();
               // 跳转到登录页面
               this.$router.replace("/login");
             })
