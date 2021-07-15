@@ -37,7 +37,6 @@
                 v-for="item in labelList"
                 :key="item.id"
                 :label="item.name"
-                @change="checkChange"
               ></el-checkbox>
             </el-checkbox-group>
           </el-form-item>
@@ -73,8 +72,7 @@ export default {
       },
       categoryList: [], // 任务等级
       labelList: [], //所属标签
-      selectedId: "", //保存所选等级id
-      checkedIdList: [], //保存所有checkbox选中的id
+      // 验证规则
       addTaskRules: {
         name: [{ required: true, message: "请输入任务名称", trigger: "blur" }],
         selectValue: [
@@ -102,17 +100,24 @@ export default {
   },
   // 计算属性
   computed: {
-    categoryId() {
+    // 选中下拉框的id
+    selectedId() {
       let newArr = this.categoryList.filter((x) => {
         return x.name == this.addTaskForm.selectValue;
       });
       return newArr[0].id;
     },
-    labelId() {},
+    // 选中多选框的id
+    labelId() {
+      let newArr = this.labelList.filter((x) => {
+        return x.name == this.addTaskForm.checkList[0];
+      });
+      return newArr[0].id;
+    },
   },
   methods: {
     // 添加按钮
-    submitForm() {
+    async submitForm() {
       this.$refs["addTaskFormRef"].validate((valid) => {
         if (!valid) {
           this.$message({
@@ -123,6 +128,32 @@ export default {
           return false;
         }
       });
+      let data = {
+        category_id: this.selectedId,
+        name: this.addTaskForm.name,
+        description: this.addTaskForm.desc,
+        label_id: this.labelId,
+      };
+      // 发送请求
+      let result = await this.$axios.post(
+        "http://localhost:3000/api/addtask",
+        data
+      );
+      if (result.data.code == "200") {
+        this.$message({
+          showClose: true,
+          message: result.data.msg,
+          type: "success",
+        });
+        // 重置表单
+        this.resetForm();
+      } else {
+        this.$message({
+          showClose: true,
+          message: result.data.msg,
+          type: "error",
+        });
+      }
     },
     // 获取等级列表
     async getCategoryList() {
@@ -131,7 +162,13 @@ export default {
       if (result.data.code == "200") {
         // 获取成功
         this.categoryList = result.data.data;
-        console.log(this.categoryList);
+        // console.log(this.categoryList);
+      } else {
+        this.$message({
+          showClose: true,
+          message: result.data.code,
+          type: "error",
+        });
       }
     },
     // 获取标签列表
@@ -140,15 +177,18 @@ export default {
       let { data } = await this.$axios.get("http://localhost:3000/api/label");
       if (data.code == "200") {
         this.labelList = data.data;
-        console.log(this.labelList);
+        // console.log(this.labelList);
+      } else {
+        this.$message({
+          showClose: true,
+          message: data.code,
+          type: "error",
+        });
       }
     },
     // 重置表单
     resetForm() {
       this.$refs["addTaskFormRef"].resetFields();
-    },
-    checkChange() {
-      console.log(this.addTaskForm.checkList);
     },
   },
 };
