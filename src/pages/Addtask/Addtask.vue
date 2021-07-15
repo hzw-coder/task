@@ -18,13 +18,16 @@
               placeholder="请输入任务名称"
             ></el-input>
           </el-form-item>
-          <el-form-item label="任务分类" prop="category">
-            <el-select v-model="categoryList" placeholder="请选择分类">
-              <el-option label="区域一" value="shanghai"></el-option>
-              <el-option label="区域二" value="beijing"></el-option>
+          <el-form-item label="任务等级" prop="category">
+            <el-select v-model="selectValue" clearable placeholder="请选择等级">
+              <el-option
+                v-for="item in categoryList"
+                :key="item.id"
+                :value="item.name"
+              ></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="所属标签" prop="labelList">
+          <!-- <el-form-item label="所属标签" prop="labelList">
             <el-checkbox-group v-model="labelList">
               <el-checkbox label="美食" name="type"></el-checkbox>
               <el-checkbox label="活动" name="type"></el-checkbox>
@@ -37,7 +40,7 @@
               <el-checkbox label="财经" name="type"></el-checkbox>
               <el-checkbox label="体育" name="type"></el-checkbox>
             </el-checkbox-group>
-          </el-form-item>
+          </el-form-item> -->
           <el-form-item label="任务描述" prop="desc">
             <el-input
               type="textarea"
@@ -66,12 +69,17 @@ export default {
         name: "", //名称
         desc: "", //描述
       },
+      selectValue: "", //下拉框的选中值
       categoryList: [], // 任务分类
       labelList: [], //所属标签
       addTaskRules: {
         name: [{ required: true, message: "请输入任务名称", trigger: "blur" }],
-        categoryList: [
-          { required: true, message: "请选择...", trigger: "change" },
+        category: [
+          {
+            required: true,
+            message: "请选择任务等级",
+            trigger: "blur",
+          },
         ],
         labelList: [
           {
@@ -86,7 +94,7 @@ export default {
     };
   },
   mounted() {
-    // this.getCategoryList();
+    this.getCategoryList();
     // this.getLabelList();
   },
 
@@ -111,7 +119,7 @@ export default {
       if (result.data.code == "200") {
         // 获取成功
         this.categoryList = result.data.data;
-        // console.log(this.categoryList);
+        console.log(this.categoryList);
       }
     },
     // 获取标签列表
