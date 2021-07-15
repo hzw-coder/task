@@ -128,15 +128,19 @@ export default {
             cancelButtonText: "取消",
             type: "warning",
           })
-            .then(() => {
-              // 清除token
-              window.localStorage.clear();
-              this.$message({
-                type: "success",
-                message: "退出登录成功!",
-              });
-              // 跳转到登录页面
-              this.$router.replace("/login");
+            .then(async () => {
+              let result = await this.$axios.post(
+                "http://localhost:3000/api/logout"
+              );
+              if (result.data.code == "200") {
+                // 清除token
+                window.localStorage.clear();
+                this.$message({
+                  type: "success",
+                  message: result.data.msg,
+                });
+                this.$router.replace("/login");
+              }
             })
             .catch(() => {
               this.$message({
