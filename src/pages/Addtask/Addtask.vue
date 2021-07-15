@@ -18,8 +18,12 @@
               placeholder="请输入任务名称"
             ></el-input>
           </el-form-item>
-          <el-form-item label="任务等级" prop="category">
-            <el-select v-model="selectValue" clearable placeholder="请选择等级">
+          <el-form-item label="任务等级" prop="selectValue">
+            <el-select
+              v-model="addTaskForm.selectValue"
+              clearable
+              placeholder="请选择等级"
+            >
               <el-option
                 v-for="item in categoryList"
                 :key="item.id"
@@ -27,20 +31,16 @@
               ></el-option>
             </el-select>
           </el-form-item>
-          <!-- <el-form-item label="所属标签" prop="labelList">
-            <el-checkbox-group v-model="labelList">
-              <el-checkbox label="美食" name="type"></el-checkbox>
-              <el-checkbox label="活动" name="type"></el-checkbox>
-              <el-checkbox label="学习" name="type"></el-checkbox>
-              <el-checkbox label="生活" name="type"></el-checkbox>
-              <el-checkbox label="娱乐" name="type"></el-checkbox>
-              <el-checkbox label="家庭" name="type"></el-checkbox>
-              <el-checkbox label="事业" name="type"></el-checkbox>
-              <el-checkbox label="游戏" name="type"></el-checkbox>
-              <el-checkbox label="财经" name="type"></el-checkbox>
-              <el-checkbox label="体育" name="type"></el-checkbox>
+          <el-form-item label="所属标签" prop="checkList">
+            <el-checkbox-group :max="1" v-model="addTaskForm.checkList">
+              <el-checkbox
+                v-for="item in labelList"
+                :key="item.id"
+                :label="item.name"
+                @change="checkChange"
+              ></el-checkbox>
             </el-checkbox-group>
-          </el-form-item> -->
+          </el-form-item>
           <el-form-item label="任务描述" prop="desc">
             <el-input
               type="textarea"
@@ -68,20 +68,23 @@ export default {
       addTaskForm: {
         name: "", //名称
         desc: "", //描述
+        selectValue: "", //下拉框的选中值
+        checkList: [],
       },
-      selectValue: "", //下拉框的选中值
-      categoryList: [], // 任务分类
+      categoryList: [], // 任务等级
       labelList: [], //所属标签
+      selectedId: "", //保存所选等级id
+      checkedIdList: [], //保存所有checkbox选中的id
       addTaskRules: {
         name: [{ required: true, message: "请输入任务名称", trigger: "blur" }],
-        category: [
+        selectValue: [
           {
             required: true,
             message: "请选择任务等级",
-            trigger: "blur",
+            trigger: "change",
           },
         ],
-        labelList: [
+        checkList: [
           {
             type: "array",
             required: true,
@@ -95,9 +98,18 @@ export default {
   },
   mounted() {
     this.getCategoryList();
-    // this.getLabelList();
+    this.getLabelList();
   },
-
+  // 计算属性
+  computed: {
+    categoryId() {
+      let newArr = this.categoryList.filter((x) => {
+        return x.name == this.addTaskForm.selectValue;
+      });
+      return newArr[0].id;
+    },
+    labelId() {},
+  },
   methods: {
     // 添加按钮
     submitForm() {
@@ -112,7 +124,7 @@ export default {
         }
       });
     },
-    // 获取分类列表
+    // 获取等级列表
     async getCategoryList() {
       // 发送get请求
       let result = await this.$axios.get("http://localhost:3000/api/category");
@@ -134,6 +146,9 @@ export default {
     // 重置表单
     resetForm() {
       this.$refs["addTaskFormRef"].resetFields();
+    },
+    checkChange() {
+      console.log(this.addTaskForm.checkList);
     },
   },
 };

@@ -30,7 +30,7 @@
             </el-menu-item>
             <el-menu-item @click="showPath" index="3-2">
               <i class="el-icon-menu"></i>
-              <span slot="title">分类列表</span>
+              <span slot="title">等级列表</span>
             </el-menu-item>
             <el-menu-item @click="showPath" index="3-3">
               <i class="el-icon-price-tag"></i>
@@ -136,7 +136,7 @@ export default {
                 message: "退出登录成功!",
               });
               // 跳转到登录页面
-              // this.$router.replace("/login");
+              this.$router.replace("/login");
             })
             .catch(() => {
               this.$message({
