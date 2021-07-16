@@ -3,20 +3,20 @@
     <el-card shadow="hover" class="box-card">
       <div slot="header" class="clearfix">
         <span class="categoryTitle">分类列表</span>
-        <el-button @click="dialogVisible = true" type="primary"
+        <el-button @click="addDialogVisible = true" type="primary"
           >添加分类</el-button
         >
       </div>
       <el-table
-        :data="tableData"
+        :data="categoryTableData"
         :header-cell-style="{ 'text-align': 'center' }"
         stripe
         border
         style="width: 100%"
       >
-        <el-table-column align="center" prop="date" label="分类名称">
+        <el-table-column align="center" prop="name" label="等级名称">
         </el-table-column>
-        <el-table-column align="center" prop="name" label="所含任务数量">
+        <el-table-column align="center" prop="countnum" label="所含任务数量">
         </el-table-column>
         <el-table-column align="center" label="操作" width="200">
           <template slot-scope="">
@@ -31,38 +31,36 @@
       <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
-        :current-page="currentPage4"
-        :page-sizes="[100, 200, 300, 400]"
-        :page-size="100"
+        :current-page="params.curPage"
+        :page-sizes="[1, 3, 5, 10]"
+        :page-size="params.pageSize"
         layout="total, sizes, prev, pager, next, jumper"
-        :total="400"
+        :total="total"
       >
       </el-pagination>
     </el-card>
     <el-dialog
       title="提示"
-      :visible.sync="dialogVisible"
+      :visible.sync="addDialogVisible"
       width="30%"
       :before-close="handleClose"
     >
       <el-form
-        :model="addForm"
-        :rules="addRules"
-        ref="ruleForm"
+        :model="addCategoryForm"
+        :rules="addCategoryRules"
+        ref="addFormRef"
         class="demo-ruleForm"
       >
         <el-form-item prop="name">
           <el-input
             placeholder="请输入新的分类名称"
-            v-model="addForm.name"
+            v-model="addCategoryForm.name"
           ></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogVisible = false"
-          >确 定</el-button
-        >
+        <el-button @click="closeAddDialog">取 消</el-button>
+        <el-button type="primary" @click="addCategory">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -71,66 +69,102 @@
 <script>
 export default {
   name: "Category",
-
+  mounted() {
+    this.getCategoryList();
+  },
   data() {
     return {
-      options: [
-        {
-          value: "选项1",
-          label: "黄金糕",
-        },
-        {
-          value: "选项2",
-          label: "双皮奶",
-        },
-        {
-          value: "选项3",
-          label: "蚵仔煎",
-        },
-        {
-          value: "选项4",
-          label: "龙须面",
-        },
-        {
-          value: "选项5",
-          label: "北京烤鸭",
-        },
-      ],
-      value: "",
-      tableData: [
-        {
-          date: "2016-05-02",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1518 弄",
-        },
-        {
-          date: "2016-05-04",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1517 弄",
-        },
-        {
-          date: "2016-05-01",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1519 弄",
-        },
-        {
-          date: "2016-05-03",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1516 弄",
-        },
-      ],
-      dialogVisible: false,
-      addForm: {
+      categoryTableData: [],
+      // get请求参数
+      params: {
+        curPage: 1, //当前页
+        pageSize: 1, //每页数量
+      },
+      total: 0, //总数
+      addDialogVisible: false,
+      addCategoryForm: {
         name: "",
       },
-      addRules: {
+      addCategoryRules: {
         name: [{ required: true, message: "请输入分类名称", trigger: "blur" }],
       },
     };
   },
 
   methods: {
-    handleClose() {},
+    async getCategoryList() {
+      // 发送请求
+      let { data } = await this.$axios.get(
+        "http://localhost:3000/api/category_task",
+        {
+          params: this.params,
+        }
+      );
+      if (data.code == "200") {
+        // 成功
+        this.categoryTableData = data.data;
+        this.total = data.total;
+      }
+    },
+    handleSizeChange(newSize) {
+      this.params.pageSize = newSize;
+      this.getCategoryList();
+    },
+    handleCurrentChange(newPage) {
+      this.params.curPage = newPage;
+      this.getCategoryList();
+    },
+    // 关闭对话框
+    handleClose() {
+      this.addDialogVisible = false;
+      // 重置表单
+      this.$refs["addFormRef"].resetFields();
+    },
+    // 取消对话框
+    closeAddDialog() {
+      this.addDialogVisible = false;
+      // 重置表单
+      this.$refs["addFormRef"].resetFields();
+    },
+    // 添加
+    addCategory() {
+      this.$refs["addFormRef"].validate(async (valid) => {
+        if (!valid) {
+          this.$message({
+            showClose: true,
+            message: "请填写正确信息",
+            type: "warning",
+          });
+          return;
+        }
+        let data = {
+          name: this.addCategoryForm.name,
+        };
+        // 发送请求
+        let result = await this.$axios.post(
+          "http://localhost:3000/api/addcategory",
+          data
+        );
+        console.log(result);
+        if (result.data.code !== "200") {
+          this.$message({
+            showClose: true,
+            message: result.data.msg,
+            type: "error",
+          });
+          return;
+        } else {
+          this.$message({
+            showClose: true,
+            message: result.data.msg,
+            type: "success",
+          });
+        }
+      });
+      this.addDialogVisible = false;
+      // 重置表单
+      this.$refs["addFormRef"].resetFields();
+    },
   },
 };
 </script>
