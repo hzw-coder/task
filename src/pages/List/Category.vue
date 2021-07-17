@@ -20,7 +20,9 @@
         </el-table-column>
         <el-table-column align="center" label="操作" width="200">
           <template slot-scope="scope">
-            <el-button size="mini" @click="editCate(scope.row.id)"
+            <el-button
+              size="mini"
+              @click="showEditCate(scope.row.id, scope.row.name)"
               >编辑</el-button
             >
             <el-button
@@ -44,6 +46,7 @@
       >
       </el-pagination>
     </el-card>
+    <!-- 添加对话框 -->
     <el-dialog
       title="提示"
       :visible.sync="addDialogVisible"
@@ -66,6 +69,31 @@
       <span slot="footer" class="dialog-footer">
         <el-button @click="closeAddDialog">取 消</el-button>
         <el-button type="primary" @click="addCategory">确 定</el-button>
+      </span>
+    </el-dialog>
+    <!-- 编辑对话框 -->
+    <el-dialog
+      title="提示"
+      :visible.sync="editDialogVisible"
+      width="30%"
+      :before-close="edithandleClose"
+    >
+      <el-form
+        :model="editCategoryForm"
+        :rules="editCategoryRules"
+        ref="editFormRef"
+        class="demo-ruleForm"
+      >
+        <el-form-item prop="name">
+          <el-input
+            placeholder="请输入新的分类名称"
+            v-model="editCategoryForm.name"
+          ></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="closeEditDialog">取 消</el-button>
+        <el-button type="primary" @click="editCategory">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -91,6 +119,12 @@ export default {
         name: "",
       },
       addCategoryRules: {
+        name: [{ required: true, message: "请输入分类名称", trigger: "blur" }],
+      },
+      saveName: "", //编辑框默认内容
+      editDialogVisible: false,
+      editCategoryForm: {},
+      editCategoryRules: {
         name: [{ required: true, message: "请输入分类名称", trigger: "blur" }],
       },
     };
@@ -125,12 +159,21 @@ export default {
       // 重置表单
       this.$refs["addFormRef"].resetFields();
     },
+    edithandleClose() {
+      this.editDialogVisible = false;
+      // this.$refs["editFormRef"].resetFields();
+    },
     // 取消对话框
     closeAddDialog() {
       this.addDialogVisible = false;
       // 重置表单
       this.$refs["addFormRef"].resetFields();
     },
+    closeEditDialog() {
+      this.editDialogVisible = false;
+      // this.$refs["editFormRef"].resetFields();
+    },
+
     // 添加
     addCategory() {
       this.$refs["addFormRef"].validate(async (valid) => {
@@ -164,17 +207,78 @@ export default {
             message: result.data.msg,
             type: "success",
           });
+          this.getCategoryList();
         }
       });
       this.addDialogVisible = false;
       // 重置表单
       this.$refs["addFormRef"].resetFields();
     },
-    // 编辑
-    editCate(id) {
-      console.log(id);
+    // 打开编辑对话框
+    async showEditCate(id, name) {
+      this.editDialogVisible = true;
+      this.saveName = name;
+      // 根据id查询分类
+      let { data } = await this.$axios.get(
+        "http://localhost:3000/api/singlecategory",
+        {
+          params: { id: id },
+        }
+      );
+      if (data.code !== "200") {
+        this.$message({
+          type: "error",
+          message: "获取失败!",
+        });
+        return;
+      }
+      this.editCategoryForm = data.data[0];
     },
-
+    // 确认编辑
+    editCategory() {
+      if (this.saveName == this.editCategoryForm.name) {
+        // 没有修改,直接保存
+        this.$message({
+          showClose: true,
+          message: "您未做出修改",
+          type: "warning",
+        });
+        this.editDialogVisible = false;
+        return;
+      }
+      // 预校验
+      this.$refs["editFormRef"].validate(async (valid) => {
+        if (!valid) {
+          return;
+        }
+        let data = {
+          id: this.editCategoryForm.id,
+          name: this.editCategoryForm.name,
+        };
+        // 发送请求
+        let result = await this.$axios.post(
+          "http://localhost:3000/api/editcategory",
+          data
+        );
+        if (result.data.code !== "200") {
+          this.$message({
+            showClose: true,
+            message: result.data.msg,
+            type: "error",
+          });
+          return;
+        } else {
+          // 成功
+          this.$message({
+            showClose: true,
+            message: result.data.msg,
+            type: "success",
+          });
+        }
+        this.editDialogVisible = false;
+        this.getCategoryList();
+      });
+    },
     // 删除
     deleteCate(id, num) {
       this.$confirm("确定删除该等级么, 是否继续?", "提示", {
