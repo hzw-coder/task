@@ -111,7 +111,7 @@ export default {
       // get请求参数
       params: {
         curPage: 1, //当前页
-        pageSize: 1, //每页数量
+        pageSize: 3, //每页数量
       },
       total: 0, //总数
       addDialogVisible: false,
