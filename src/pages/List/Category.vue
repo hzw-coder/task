@@ -19,11 +19,16 @@
         <el-table-column align="center" prop="countnum" label="所含任务数量">
         </el-table-column>
         <el-table-column align="center" label="操作" width="200">
-          <template slot-scope="">
-            <el-button size="mini" @click="dialogVisible = true"
+          <template slot-scope="scope">
+            <el-button size="mini" @click="editCate(scope.row.id)"
               >编辑</el-button
             >
-            <el-button size="mini" type="danger">删除</el-button>
+            <el-button
+              size="mini"
+              @click="deleteCate(scope.row.id, scope.row.countnum)"
+              type="danger"
+              >删除</el-button
+            >
           </template>
         </el-table-column>
       </el-table>
@@ -164,6 +169,55 @@ export default {
       this.addDialogVisible = false;
       // 重置表单
       this.$refs["addFormRef"].resetFields();
+    },
+    // 编辑
+    editCate(id) {
+      console.log(id);
+    },
+
+    // 删除
+    deleteCate(id, num) {
+      this.$confirm("确定删除该等级么, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(async () => {
+          // 判断是否可以删除
+          if (num > 0) {
+            this.$message({
+              type: "error",
+              message: "还有任务未完成，无法删除",
+            });
+            return;
+          } else {
+            // 发请求
+            let result = await this.$axios.delete(
+              "http://localhost:3000/api/category",
+              {
+                data: { id: id },
+              }
+            );
+            if (result.data.code !== "200") {
+              this.$message({
+                type: "error",
+                message: "删除失败!",
+              });
+            }
+            // 成功
+            this.getCategoryList();
+            this.$message({
+              type: "success",
+              message: "删除成功!",
+            });
+          }
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除",
+          });
+        });
     },
   },
 };
