@@ -3,35 +3,35 @@
     <div class="search">
       <el-input
         clearable
-        v-model="input"
+        v-model="taskName"
         placeholder="输入任务名称进行搜索"
       ></el-input>
       <div class="selection">
-        <label>任务分类：</label>
-        <el-select v-model="value" clearable placeholder="请选择">
+        <label>任务等级：</label>
+        <el-select v-model="cateId" clearable placeholder="请选择">
           <el-option
-            v-for="item in options"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
+            v-for="item in cateOptions"
+            :key="item.id"
+            :label="item.name"
+            :value="item.id"
           >
           </el-option>
         </el-select>
       </div>
       <div class="selection">
         <label>标签分类：</label>
-        <el-select v-model="value" clearable placeholder="请选择">
+        <el-select v-model="labelId" clearable placeholder="请选择">
           <el-option
-            v-for="item in options"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
+            v-for="item in labelOptions"
+            :key="item.id"
+            :value="item.id"
+            :label="item.name"
           >
           </el-option>
         </el-select>
       </div>
       <div class="searchbtn">
-        <el-button type="primary">查询</el-button>
+        <el-button @click="searchTask" type="primary">查询</el-button>
       </div>
     </div>
     <el-card shadow="hover" class="box-card">
@@ -61,7 +61,7 @@
       <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
-        :current-page="currentPage4"
+        :current-page="currentPage"
         :page-sizes="[100, 200, 300, 400]"
         :page-size="100"
         layout="total, sizes, prev, pager, next, jumper"
@@ -75,33 +75,17 @@
 <script>
 export default {
   name: "task",
-
+  mounted() {
+    this.getAllCategoryList();
+    this.getAllLabelList();
+  },
   data() {
     return {
-      input: "",
-      options: [
-        {
-          value: "选项1",
-          label: "黄金糕",
-        },
-        {
-          value: "选项2",
-          label: "双皮奶",
-        },
-        {
-          value: "选项3",
-          label: "蚵仔煎",
-        },
-        {
-          value: "选项4",
-          label: "龙须面",
-        },
-        {
-          value: "选项5",
-          label: "北京烤鸭",
-        },
-      ],
-      value: "",
+      taskName: "",
+      cateOptions: [],
+      labelOptions: [],
+      cateId: "",
+      labelId: "",
       tableData: [
         {
           date: "2016-05-02",
@@ -124,10 +108,32 @@ export default {
           address: "上海市普陀区金沙江路 1516 弄",
         },
       ],
+      currentPage: 1,
     };
   },
-
-  methods: {},
+  methods: {
+    // 获取等级列表
+    async getAllCategoryList() {
+      let { data } = await this.$axios.get(
+        "http://localhost:3000/api/category"
+      );
+      if (data.code == "200") {
+        this.cateOptions = data.data;
+      }
+    },
+    // 获取标签列表
+    async getAllLabelList() {
+      let { data } = await this.$axios.get("http://localhost:3000/api/label");
+      if (data.code == "200") {
+        this.labelOptions = data.data;
+      }
+    },
+    handleSizeChange() {},
+    handleCurrentChange() {},
+    searchTask() {
+      console.log(this.cateId, this.labelId);
+    },
+  },
 };
 </script>
 
