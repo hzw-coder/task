@@ -8,6 +8,7 @@ const Comment = () => import('../pages/Comment/Comment.vue')
 const Category = () => import('../pages/List/Category.vue')
 const Label = () => import('../pages/List/Label.vue')
 const Task = () => import('../pages/List/Task.vue')
+const Statistics = () => import('../pages/Statistics/Statistics.vue')
 
 Vue.use(Router)
 
@@ -60,6 +61,11 @@ const router = new Router({
           path: '/label',
           name: 'label',
           component: Label
+        },
+        {
+          path: '/statistics',
+          neme: 'statistics',
+          component: Statistics
         }
       ]
     }

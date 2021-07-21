@@ -5,8 +5,10 @@ import App from './App'
 import router from './router'
 import './plugins/element.js'
 import axios from 'axios'
+import * as echarts from 'echarts'
 
 Vue.prototype.$axios = axios
+Vue.prototype.$echarts = echarts
 
 Vue.config.productionTip = false
 axios.defaults.withCredentials = true; //每次请求，无论是否跨域，都带上cookie信息

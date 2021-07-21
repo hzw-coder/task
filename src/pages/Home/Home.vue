@@ -42,7 +42,7 @@
           <i class="el-icon-s-comment"></i>
           <span slot="title">提交反馈</span>
         </el-menu-item>
-        <el-menu-item @click="showPath" index="5">
+        <el-menu-item @click="showPath" index="/statistics">
           <i class="el-icon-s-data"></i>
           <span slot="title">数据统计</span>
         </el-menu-item>
