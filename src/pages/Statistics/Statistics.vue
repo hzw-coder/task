@@ -129,6 +129,7 @@ export default {
       */
       // 动态渲染数据
       this.$nextTick(() => {
+        // 数据渲染完成后再执行
         this.baseinit();
         this.leftinit();
         this.rightinit();
