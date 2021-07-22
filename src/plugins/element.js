@@ -29,7 +29,9 @@ import {
   Table,
   TableColumn,
   Pagination,
-  Dialog
+  Dialog,
+  Row,
+  Col
 } from 'element-ui'
 
 Vue.prototype.$message = Message
@@ -37,6 +39,8 @@ Vue.prototype.$confirm = MessageBox.confirm
 Vue.use(Button)
 Vue.use(Input)
 Vue.use(Form)
+Vue.use(Row)
+Vue.use(Col)
 Vue.use(FormItem)
 Vue.use(Container)
 Vue.use(Header)
