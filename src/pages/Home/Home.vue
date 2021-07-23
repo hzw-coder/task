@@ -63,7 +63,7 @@
           </span>
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item command="home">首页</el-dropdown-item>
-            <el-dropdown-item command="personal">个人中心</el-dropdown-item>
+            <el-dropdown-item command="password">修改密码</el-dropdown-item>
             <el-dropdown-item command="logout" divided
               >退出登录</el-dropdown-item
             >
@@ -74,6 +74,49 @@
         <router-view></router-view>
       </el-main>
     </el-container>
+    <!-- 修改密码 -->
+    <el-dialog
+      title="提示"
+      :visible.sync="updateDialogVisible"
+      width="30%"
+      :before-close="updatehandleClose"
+    >
+      <el-form
+        :model="updatePasswordForm"
+        :rules="updatePasswordRules"
+        ref="updateFormRef"
+        class="demo-ruleForm"
+      >
+        <el-form-item label="旧密码" prop="old_password">
+          <el-input
+            placeholder="请输入旧密码"
+            prefix-icon="el-icon-unlock"
+            show-password
+            v-model="updatePasswordForm.old_password"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="新密码" prop="new_password">
+          <el-input
+            placeholder="请输入新密码"
+            prefix-icon="el-icon-unlock"
+            show-password
+            v-model="updatePasswordForm.new_password"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="确认新密码" prop="new_password2">
+          <el-input
+            placeholder="请确认新密码"
+            prefix-icon="el-icon-unlock"
+            show-password
+            v-model="updatePasswordForm.new_password2"
+          ></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="closeUpdateDialog">取 消</el-button>
+        <el-button type="primary" @click="updatePassword">确 定</el-button>
+      </span>
+    </el-dialog>
   </el-container>
 </template>
 
@@ -88,6 +131,28 @@ export default {
       isCollapse: false,
       iconClass: "el-icon-s-fold",
       activePath: "",
+      // 修改密码
+      updatePasswordForm: {
+        old_password: "",
+        new_password: "",
+        new_password2: "",
+      },
+      updateDialogVisible: false,
+      // 密码验证规则
+      updatePasswordRules: {
+        old_password: [
+          { required: true, message: "请输入旧密码", trigger: "blur" },
+          { min: 6, max: 20, message: "长度在6到20个字符", trigger: "blur" },
+        ],
+        new_password: [
+          { required: true, message: "请输入新密码", trigger: "blur" },
+          { min: 6, max: 20, message: "长度在6到20个字符", trigger: "blur" },
+        ],
+        new_password2: [
+          { required: true, message: "请确认新密码", trigger: "blur" },
+          { min: 6, max: 20, message: "长度在6到20个字符", trigger: "blur" },
+        ],
+      },
     };
   },
   mounted() {
@@ -116,11 +181,8 @@ export default {
           // 改变激活菜单
           this.activePath = "/welcome";
           break;
-        case "personal":
-          this.$message({
-            message: "功能暂未开放,请期待",
-            type: "warning",
-          });
+        case "password":
+          this.updateDialogVisible = true;
           break;
         case "logout":
           this.$confirm("确定退出登录?", "提示", {
@@ -149,6 +211,43 @@ export default {
               });
             });
           break;
+      }
+    },
+    updatehandleClose() {
+      this.updateDialogVisible = false;
+      this.$refs["updateFormRef"].resetFields();
+    },
+    closeUpdateDialog() {
+      this.updateDialogVisible = false;
+      this.$refs["updateFormRef"].resetFields();
+    },
+    // 确认修改密码
+    async updatePassword() {
+      this.$refs["updateFormRef"].validate((valid) => {
+        if (!valid) {
+          return false;
+        }
+      });
+      let data = {
+        old_password: this.updatePasswordForm.old_password,
+        new_password: this.updatePasswordForm.new_password,
+        new_password2: this.updatePasswordForm.new_password2,
+      };
+      let result = await this.$axios.post(
+        "http://localhost:3000/api/password",
+        data
+      );
+      if (result.data.code == "401") {
+        this.$message({
+          message: result.data.msg,
+          type: "warning",
+        });
+      } else if (result.data.code == "200") {
+        this.$message({
+          message: result.data.msg,
+          type: "success",
+        });
+        this.updateDialogVisible = false;
       }
     },
   },
