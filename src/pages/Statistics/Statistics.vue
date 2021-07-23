@@ -233,7 +233,7 @@ export default {
       let option = {
         // 标题
         title: {
-          text: "近几周完成情况",
+          text: "上周完成情况",
         },
 
         color: ["#87CEFF"],
