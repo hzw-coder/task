@@ -60,12 +60,7 @@ export default {
     async submitComment() {
       this.$refs["commentFormRef"].validate((valid) => {
         if (!valid) {
-          this.$message({
-            showClose: true,
-            message: "请填写完整信息",
-            type: "warning",
-          });
-          return false;
+          return;
         }
       });
       let data = {

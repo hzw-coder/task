@@ -43,6 +43,7 @@
         type="primary"
         >登录</el-button
       >
+      <div class="tips">用户名:admin,密码:123456</div>
     </el-form>
   </div>
 </template>
@@ -83,12 +84,7 @@ export default {
       // 前端预校验
       this.$refs["ruleFormRef"].validate((valid) => {
         if (!valid) {
-          this.$message({
-            showClose: true,
-            message: "请填写正确信息",
-            type: "warning",
-          });
-          return false;
+          return;
         }
       });
       let postData = {
@@ -103,7 +99,11 @@ export default {
       );
       if (result.data.code == "200") {
         window.localStorage.setItem("token", result.data.token);
-        alert("登录成功");
+        this.$message({
+          showClose: true,
+          message: "登录成功",
+          type: "success",
+        });
         this.$router.replace("/home");
       } else if (result.data.code !== "200") {
         this.$message({
@@ -142,6 +142,10 @@ export default {
       vertical-align: middle;
       width: 110px;
       height: 45px;
+    }
+    .tips {
+      width: 200px;
+      margin: 0 auto;
     }
   }
 }

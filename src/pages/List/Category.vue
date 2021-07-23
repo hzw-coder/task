@@ -175,41 +175,36 @@ export default {
     },
 
     // 添加
-    addCategory() {
-      this.$refs["addFormRef"].validate(async (valid) => {
+    async addCategory() {
+      this.$refs["addFormRef"].validate((valid) => {
         if (!valid) {
-          this.$message({
-            showClose: true,
-            message: "请填写正确信息",
-            type: "warning",
-          });
           return;
-        }
-        let data = {
-          name: this.addCategoryForm.name,
-        };
-        // 发送请求
-        let result = await this.$axios.post(
-          "http://localhost:3000/api/addcategory",
-          data
-        );
-        console.log(result);
-        if (result.data.code !== "200") {
-          this.$message({
-            showClose: true,
-            message: result.data.msg,
-            type: "error",
-          });
-          return;
-        } else {
-          this.$message({
-            showClose: true,
-            message: result.data.msg,
-            type: "success",
-          });
-          this.getCategoryList();
         }
       });
+      let data = {
+        name: this.addCategoryForm.name,
+      };
+      // 发送请求
+      let result = await this.$axios.post(
+        "http://localhost:3000/api/addcategory",
+        data
+      );
+      console.log(result);
+      if (result.data.code !== "200") {
+        this.$message({
+          showClose: true,
+          message: result.data.msg,
+          type: "error",
+        });
+        return;
+      } else {
+        this.$message({
+          showClose: true,
+          message: result.data.msg,
+          type: "success",
+        });
+        this.getCategoryList();
+      }
       this.addDialogVisible = false;
       // 重置表单
       this.$refs["addFormRef"].resetFields();
@@ -235,7 +230,7 @@ export default {
       this.editCategoryForm = data.data[0];
     },
     // 确认编辑
-    editCategory() {
+    async editCategory() {
       if (this.saveName == this.editCategoryForm.name) {
         // 没有修改,直接保存
         this.$message({
@@ -247,37 +242,37 @@ export default {
         return;
       }
       // 预校验
-      this.$refs["editFormRef"].validate(async (valid) => {
+      this.$refs["editFormRef"].validate((valid) => {
         if (!valid) {
           return;
         }
-        let data = {
-          id: this.editCategoryForm.id,
-          name: this.editCategoryForm.name,
-        };
-        // 发送请求
-        let result = await this.$axios.post(
-          "http://localhost:3000/api/editcategory",
-          data
-        );
-        if (result.data.code !== "200") {
-          this.$message({
-            showClose: true,
-            message: result.data.msg,
-            type: "error",
-          });
-          return;
-        } else {
-          // 成功
-          this.$message({
-            showClose: true,
-            message: result.data.msg,
-            type: "success",
-          });
-        }
-        this.editDialogVisible = false;
-        this.getCategoryList();
       });
+      let data = {
+        id: this.editCategoryForm.id,
+        name: this.editCategoryForm.name,
+      };
+      // 发送请求
+      let result = await this.$axios.post(
+        "http://localhost:3000/api/editcategory",
+        data
+      );
+      if (result.data.code !== "200") {
+        this.$message({
+          showClose: true,
+          message: result.data.msg,
+          type: "error",
+        });
+        return;
+      } else {
+        // 成功
+        this.$message({
+          showClose: true,
+          message: result.data.msg,
+          type: "success",
+        });
+      }
+      this.editDialogVisible = false;
+      this.getCategoryList();
     },
     // 删除
     deleteCate(id, num) {
