@@ -72,18 +72,18 @@ const router = new Router({
   ]
 })
 // 路由导航守卫
-// router.beforeEach((to, from, next) => {
-//   const token = window.localStorage.getItem('token')
-//   if (to.path == '/login') {
-//     return next()
-//   } else {
-//     if (!token) {
-//       return next('/login')
-//     } else {
-//       return next()
-//     }
-//   }
-// })
+router.beforeEach((to, from, next) => {
+  const token = window.localStorage.getItem('token')
+  if (to.path == '/login') {
+    return next()
+  } else {
+    if (!token) {
+      return next('/login')
+    } else {
+      return next()
+    }
+  }
+})
 
 
 export default router
