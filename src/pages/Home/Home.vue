@@ -10,11 +10,11 @@
         background-color="#304156"
         router
       >
-        <el-menu-item @click="showPath" index="/welcome">
+        <el-menu-item index="/welcome">
           <i class="el-icon-s-home"></i>
           <span slot="title">首页</span>
         </el-menu-item>
-        <el-menu-item @click="showPath" index="/addtask">
+        <el-menu-item index="/addtask">
           <i class="el-icon-circle-plus"></i>
           <span slot="title">添加任务</span>
         </el-menu-item>
@@ -24,25 +24,25 @@
             <span slot="title">列表</span>
           </template>
           <el-menu-item-group>
-            <el-menu-item @click="showPath" index="/task">
+            <el-menu-item index="/task">
               <i class="el-icon-document"></i>
               <span slot="title">任务列表</span>
             </el-menu-item>
-            <el-menu-item @click="showPath" index="/category">
+            <el-menu-item index="/category">
               <i class="el-icon-menu"></i>
               <span slot="title">等级列表</span>
             </el-menu-item>
-            <el-menu-item @click="showPath" index="/label">
+            <el-menu-item index="/label">
               <i class="el-icon-price-tag"></i>
               <span slot="title">标签列表</span>
             </el-menu-item>
           </el-menu-item-group>
         </el-submenu>
-        <el-menu-item @click="showPath" index="/comment">
+        <!-- <el-menu-item index="/comment">
           <i class="el-icon-s-comment"></i>
           <span slot="title">提交反馈</span>
-        </el-menu-item>
-        <el-menu-item @click="showPath" index="/statistics">
+        </el-menu-item> -->
+        <el-menu-item index="/statistics">
           <i class="el-icon-s-data"></i>
           <span slot="title">数据统计</span>
         </el-menu-item>
@@ -156,8 +156,15 @@ export default {
     };
   },
   mounted() {
-    // 显示激活项
-    this.showPath();
+    // // 显示激活项
+    // this.showPath();
+    this.activePath = this.$route.path;
+  },
+  // 监听路由的变化改变激活项
+  watch: {
+    $route(to, from) {
+      this.activePath = to.path;
+    },
   },
   methods: {
     toggleIcon() {
@@ -170,16 +177,11 @@ export default {
         this.iconClass = "el-icon-s-fold";
       }
     },
-    showPath() {
-      this.activePath = this.$route.path;
-    },
     handleCommand(command) {
       switch (command) {
         case "home":
           // 跳转首页
           this.$router.push("/welcome");
-          // 改变激活菜单
-          this.activePath = "/welcome";
           break;
         case "password":
           this.updateDialogVisible = true;

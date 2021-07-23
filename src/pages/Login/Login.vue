@@ -123,6 +123,7 @@ export default {
 .loginPage {
   .loginTitle {
     text-align: center;
+    margin: 20px 0;
   }
   border-radius: 8px;
   box-shadow: 0px 0px 8px;

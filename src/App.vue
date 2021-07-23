@@ -15,6 +15,7 @@ html,
 body,
 #app {
   height: 100%;
+  min-width: 1200px;
 }
 * {
   margin: 0;
