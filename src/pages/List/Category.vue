@@ -133,12 +133,9 @@ export default {
   methods: {
     async getCategoryList() {
       // 发送请求
-      let { data } = await this.$axios.get(
-        "http://localhost:3000/api/category_task",
-        {
-          params: this.params,
-        }
-      );
+      let { data } = await this.$axios.get("/api/category_task", {
+        params: this.params,
+      });
       if (data.code == "200") {
         // 成功
         this.categoryTableData = data.data;
@@ -185,10 +182,7 @@ export default {
         name: this.addCategoryForm.name,
       };
       // 发送请求
-      let result = await this.$axios.post(
-        "http://localhost:3000/api/addcategory",
-        data
-      );
+      let result = await this.$axios.post("/api/addcategory", data);
       console.log(result);
       if (result.data.code !== "200") {
         this.$message({
@@ -214,12 +208,9 @@ export default {
       this.editDialogVisible = true;
       this.saveName = name;
       // 根据id查询分类
-      let { data } = await this.$axios.get(
-        "http://localhost:3000/api/singlecategory",
-        {
-          params: { id: id },
-        }
-      );
+      let { data } = await this.$axios.get("/api/singlecategory", {
+        params: { id: id },
+      });
       if (data.code !== "200") {
         this.$message({
           type: "error",
@@ -252,10 +243,7 @@ export default {
         name: this.editCategoryForm.name,
       };
       // 发送请求
-      let result = await this.$axios.post(
-        "http://localhost:3000/api/editcategory",
-        data
-      );
+      let result = await this.$axios.post("/api/editcategory", data);
       if (result.data.code !== "200") {
         this.$message({
           showClose: true,
@@ -291,12 +279,9 @@ export default {
             return;
           } else {
             // 发请求
-            let result = await this.$axios.delete(
-              "http://localhost:3000/api/category",
-              {
-                data: { id: id },
-              }
-            );
+            let result = await this.$axios.delete("/api/category", {
+              data: { id: id },
+            });
             if (result.data.code !== "200") {
               this.$message({
                 type: "error",

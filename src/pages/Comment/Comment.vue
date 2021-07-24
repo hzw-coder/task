@@ -68,10 +68,7 @@ export default {
         description: this.commentForm.describe,
       };
       // 发送请求
-      let result = await this.$axios.post(
-        "http://localhost:3000/api/comment",
-        data
-      );
+      let result = await this.$axios.post("/api/comment", data);
       if (result.data.code !== "200") {
         this.$message({
           showClose: true,

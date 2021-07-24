@@ -130,10 +130,7 @@ export default {
         label_id: this.labelId,
       };
       // 发送请求
-      let result = await this.$axios.post(
-        "http://localhost:3000/api/addtask",
-        data
-      );
+      let result = await this.$axios.post("/api/addtask", data);
       if (result.data.code == "200") {
         this.$message({
           showClose: true,
@@ -153,11 +150,10 @@ export default {
     // 获取等级列表
     async getCategoryList() {
       // 发送get请求
-      let result = await this.$axios.get("http://localhost:3000/api/category");
+      let result = await this.$axios.get("/api/category");
       if (result.data.code == "200") {
         // 获取成功
         this.categoryList = result.data.data;
-        // console.log(this.categoryList);
       } else {
         this.$message({
           showClose: true,
@@ -169,10 +165,9 @@ export default {
     // 获取标签列表
     async getLabelList() {
       // 发送请求
-      let { data } = await this.$axios.get("http://localhost:3000/api/label");
+      let { data } = await this.$axios.get("/api/label");
       if (data.code == "200") {
         this.labelList = data.data;
-        // console.log(this.labelList);
       } else {
         this.$message({
           showClose: true,

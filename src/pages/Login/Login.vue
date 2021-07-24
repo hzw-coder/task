@@ -32,7 +32,7 @@
           class="captcha_img"
           ref="img_captchaRef"
           title="点击刷新验证码"
-          src="http://localhost:3000/api/login/img_captcha"
+          src="/api/login/img_captcha"
           alt="暂无验证码"
           @click="changeCaptcha"
         />
@@ -77,7 +77,7 @@ export default {
     // 刷新验证码
     changeCaptcha() {
       this.$refs.img_captchaRef.src =
-        "http://localhost:3000/api/login/img_captcha?time" + new Date();
+        "/api/login/img_captcha?time" + new Date();
     },
     // 登录
     async login() {
@@ -93,10 +93,7 @@ export default {
         captcha: this.loginForm.captcha,
       };
       // 发送请求
-      let result = await this.$axios.post(
-        "http://localhost:3000/api/login",
-        postData
-      );
+      let result = await this.$axios.post("/api/login", postData);
       if (result.data.code == "200") {
         window.localStorage.setItem("token", result.data.token);
         this.$message({

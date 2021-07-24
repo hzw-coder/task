@@ -86,7 +86,7 @@
       >
         <el-form-item prop="name">
           <el-input
-            placeholder="请输入新的分类名称"
+            placeholder="请输入新的标签名称"
             v-model="editLabelsForm.name"
           ></el-input>
         </el-form-item>
@@ -133,12 +133,9 @@ export default {
   methods: {
     async getLabelsList() {
       // 发送请求
-      let { data } = await this.$axios.get(
-        "http://localhost:3000/api/label_task",
-        {
-          params: this.params,
-        }
-      );
+      let { data } = await this.$axios.get("/api/label_task", {
+        params: this.params,
+      });
       if (data.code == "200") {
         // 成功
         this.labelsTableData = data.data;
@@ -185,11 +182,7 @@ export default {
         name: this.addLabelsForm.name,
       };
       // 发送请求
-      let result = await this.$axios.post(
-        "http://localhost:3000/api/addlabel",
-        data
-      );
-      console.log(result);
+      let result = await this.$axios.post("/api/addlabel", data);
       if (result.data.code !== "200") {
         this.$message({
           showClose: true,
@@ -214,12 +207,9 @@ export default {
       this.editDialogVisible = true;
       this.saveName = name;
       // 根据id查询分类
-      let { data } = await this.$axios.get(
-        "http://localhost:3000/api/singlelabel",
-        {
-          params: { id: id },
-        }
-      );
+      let { data } = await this.$axios.get("/api/singlelabel", {
+        params: { id: id },
+      });
       if (data.code !== "200") {
         this.$message({
           type: "error",
@@ -252,10 +242,7 @@ export default {
         name: this.editLabelsForm.name,
       };
       // 发送请求
-      let result = await this.$axios.post(
-        "http://localhost:3000/api/editlabel",
-        data
-      );
+      let result = await this.$axios.post("/api/editlabel", data);
       if (result.data.code !== "200") {
         this.$message({
           showClose: true,
@@ -291,12 +278,9 @@ export default {
             return;
           } else {
             // 发请求
-            let result = await this.$axios.delete(
-              "http://localhost:3000/api/label",
-              {
-                data: { id: id },
-              }
-            );
+            let result = await this.$axios.delete("/api/label", {
+              data: { id: id },
+            });
             if (result.data.code !== "200") {
               this.$message({
                 type: "error",

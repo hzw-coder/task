@@ -63,7 +63,9 @@
           </span>
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item command="home">首页</el-dropdown-item>
-            <el-dropdown-item command="password">修改密码</el-dropdown-item>
+            <el-dropdown-item command="password" disabled
+              >修改密码</el-dropdown-item
+            >
             <el-dropdown-item command="logout" divided
               >退出登录</el-dropdown-item
             >
@@ -193,9 +195,7 @@ export default {
             type: "warning",
           })
             .then(async () => {
-              let result = await this.$axios.post(
-                "http://localhost:3000/api/logout"
-              );
+              let result = await this.$axios.post("/api/logout");
               if (result.data.code == "200") {
                 // 清除token
                 window.localStorage.clear();
@@ -235,10 +235,7 @@ export default {
         new_password: this.updatePasswordForm.new_password,
         new_password2: this.updatePasswordForm.new_password2,
       };
-      let result = await this.$axios.post(
-        "http://localhost:3000/api/password",
-        data
-      );
+      let result = await this.$axios.post("/api/password", data);
       if (result.data.code == "401") {
         this.$message({
           message: result.data.msg,

@@ -156,16 +156,14 @@ export default {
   methods: {
     // 获取等级列表
     async getAllCategoryList() {
-      let { data } = await this.$axios.get(
-        "http://localhost:3000/api/category"
-      );
+      let { data } = await this.$axios.get("/api/category");
       if (data.code == "200") {
         this.cateOptions = data.data;
       }
     },
     // 获取标签列表
     async getAllLabelList() {
-      let { data } = await this.$axios.get("http://localhost:3000/api/label");
+      let { data } = await this.$axios.get("/api/label");
       if (data.code == "200") {
         this.labelOptions = data.data;
       }
@@ -173,7 +171,7 @@ export default {
     // 获取任务列表
     async getTaskList() {
       // 发送请求
-      let { data } = await this.$axios.get("http://localhost:3000/api/task", {
+      let { data } = await this.$axios.get("/api/task", {
         params: this.params,
       });
       if (data.code == "200") {
@@ -187,12 +185,9 @@ export default {
       this.descriptValue = desc;
       this.editDialogVisible = true;
       // 请求单条任务
-      let { data } = await this.$axios.get(
-        "http://localhost:3000/api/singletask",
-        {
-          params: { id: id },
-        }
-      );
+      let { data } = await this.$axios.get("/api/singletask", {
+        params: { id: id },
+      });
       if (data.code !== "200") {
         this.$message({
           type: "error",
@@ -227,10 +222,7 @@ export default {
         name: this.editTaskForm.name,
         description: this.editTaskForm.description,
       };
-      let result = await this.$axios.post(
-        "http://localhost:3000/api/edittask",
-        data
-      );
+      let result = await this.$axios.post("/api/edittask", data);
       if (result.data.code !== "200") {
         this.$message({
           showClose: true,
@@ -269,12 +261,9 @@ export default {
         type: "warning",
       })
         .then(async () => {
-          let result = await this.$axios.delete(
-            "http://localhost:3000/api/task",
-            {
-              data: { id: id },
-            }
-          );
+          let result = await this.$axios.delete("/api/task", {
+            data: { id: id },
+          });
           if (result.data.code !== "200") {
             this.$message({
               type: "error",

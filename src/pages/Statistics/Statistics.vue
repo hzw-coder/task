@@ -99,7 +99,7 @@ export default {
     // 获取数据
     async getData() {
       // 发请求获取数据
-      let { data } = await this.$axios.get("http://localhost:3000/api/data");
+      let { data } = await this.$axios.get("/api/data");
       if (data.code !== "200") {
         this.$message({
           type: "error",
